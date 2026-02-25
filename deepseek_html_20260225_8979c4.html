@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewfit=cover">
+    <title>MovieFlex</title>
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ============================================
+        সম্পূর্ণ কনফিগারেশন সেকশন - আপনার লিংক বসানো হয়েছে
+    ============================================ -->
+    <script>
+        // ========== সাইট বেসিক সেটিংস ==========
+        const SITE_CONFIG = {
+            siteName: "MovieFlex",
+            logoUrl: "https://i.ibb.co.com/qLBKtFGq/IMG20260210172939.jpg",
+        };
+
+        // ========== টপ বার মেসেজ ==========
+        const TOP_BAR_MESSAGE = "🎬 আমাদের সাইট থেকে সকল মুভি ফ্রিতে দেখতে ও ডাউনলোড করতে পারবেন। তার জন্য আপনাকে ছোট্ট ১০ সেকেন্ডের একটি বিজ্ঞাপন দেখতে হবে।";
+
+        // ========== এড সেটিংস ==========
+        const AD_CONFIG = {
+            duration: 10,
+            redirectDelay: 2,
+            defaultAdLink: "https://otieu.com/4/9429975",  // ডিফল্ট এড লিংক
+            adMessage: "📺 বিজ্ঞাপন চলছে... ১০ সেকেন্ড পর ফিরে আসবেন।",
+            
+            // ডাউনলোডের জন্য আলাদা এড সেটিংস
+            downloadAdDuration: 10,
+            downloadAdLink: "https://otieu.com/4/9717825",  // ডাউনলোড এড লিংক
+            downloadRedirectDelay: 2,
+        };
+
+        // ========== ক্যাটাগরি অনুযায়ী এড লিংক ==========
+        const CATEGORY_AD_LINKS = {
+            hindi: "https://otieu.com/4/9446627",
+            bangla: "https://otieu.com/4/9446627",
+            indian: "https://otieu.com/4/9446627",
+            anime: "https://otieu.com/4/9446627",
+            action: "https://otieu.com/4/9446627",
+            natok: "https://otieu.com/4/9446627",
+            all: "https://otieu.com/4/9446627"
+        };
+
+        // ========== মুভি স্পেসিফিক এড লিংক ==========
+        const MOVIE_SPECIFIC_AD_LINKS = {
+            1: "https://otieu.com/4/9446627",
+            2: "https://otieu.com/4/9446627",
+            3: "https://otieu.com/4/9446627",
+            4: "https://otieu.com/4/9446627",
+            5: "https://otieu.com/4/9446627",
+            6: "https://otieu.com/4/9446627",
+            7: "https://otieu.com/4/9446627",
+            8: "https://otieu.com/4/9446627",
+            9: "https://otieu.com/4/9446627",
+            10: "https://otieu.com/4/9446627",
+            11: "https://otieu.com/4/9446627",
+            12: "https://otieu.com/4/9446627",
+            13: "https://otieu.com/4/9446627",
+            14: "https://otieu.com/4/9446627",
+            15: "https://otieu.com/4/9446627",
+            101: "https://otieu.com/4/9446627",
+            102: "https://otieu.com/4/9446627",
+            103: "https://otieu.com/4/9446627",
+            104: "https://otieu.com/4/9446627",
+            105: "https://otieu.com/4/9446627",
+            106: "https://otieu.com/4/9446627",
+            107: "https://otieu.com/4/9446627",
+            108: "https://otieu.com/4/9446627",
+            109: "https://otieu.com/4/9446627",
+            110: "https://otieu.com/4/9446627",
+        };
+
+        // ========== ট্রেন্ডিং মুভির এড লিংক ==========
+        const TRENDING_AD_LINK = "https://otieu.com/4/9446627";
+
+        // ========== ফিচারড মুভির আইডি ==========
+        const FEATURED_MOVIES = [1, 2, 3];
+
+        // ========== ট্রেন্ডিং মুভি ডাটা ==========
+        const TRENDING_MOVIE = {
+            id: "trending",
+            title: "তুফান (Toofan) - শাকিব খান",
+            year: "২০২৫",
+            rating: "৮.৯",
+            duration: "২ঘ ২০মি",
+            quality: "4K",
+            category: "bangla",
+            thumbnail: "https://i.ibb.co.com/DfLzRDm0/article.jpg",
+            videoUrl: "https://www.youtube.com/watch?v=JItSQECXCIg",
+            downloadUrl: "https://www.youtube.com/watch?v=JItSQECXCIg",
+            liveUrl: "https://www.youtube.com/watch?v=JItSQECXCIg",
+            description: "শাকিব খান, মিমি ও নাবিলা অভিনীত একটি অ্যাকশন থ্রিলার সিনেমা। নির্ভীক টোফান তার শহরকে বাঁচাতে দুর্নীতির বিরুদ্ধে লড়াই করে।"
+        };
+
+        // ========== মুভি ডাটাবেস - ক্যাটাগরি অনুযায়ী সব লিংক বসানো হয়েছে ==========
+        const MOVIES = [
+            // ========== হিন্দি মুভি (আগের মতোই থাকবে) ==========
+            { id: 1, title: "জওয়ান", year: "২০২৩", rating: "৮.৫", quality: "4K", category: "hindi", 
+              thumbnail: "https://i.ibb.co.com/jawan.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_1",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_1",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_1",
+              description: "শাহরুখ খানের ব্লকবাস্টার" },
+            
+            { id: 2, title: "পাঠান", year: "২০২৩", rating: "৮.২", quality: "4K", category: "hindi", 
+              thumbnail: "https://i.ibb.co.com/pathaan.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_2",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_2",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_2",
+              description: "শাহরুখ খানের অ্যাকশন" },
+            
+            { id: 3, title: "এনিম্যাল", year: "২০২৩", rating: "৮.৮", quality: "4K", category: "hindi", 
+              thumbnail: "https://i.ibb.co.com/animal.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_3",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_3",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_3",
+              description: "রণবীর কাপুরের ব্লকবাস্টার" },
+            
+            { id: 13, title: "ডঙ্কি", year: "২০২৩", rating: "৭.৯", quality: "HD", category: "hindi", 
+              thumbnail: "https://i.ibb.co.com/dunki.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_13",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_13",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_13",
+              description: "শাহরুখ খানের কমেডি" },
+            
+            // ========== বাংলা মুভি (আপডেটেড) ==========
+            { 
+                id: 4, 
+                title: "THE KING IS HERE", 
+                year: "২০২৫", 
+                rating: "৮.৭", 
+                quality: "4K", 
+                category: "bangla", 
+                thumbnail: "https://i.ibb.co.com/zhhDMP1x/hq720-1.jpg",
+                videoUrl: "https://youtu.be/1QArU6QRSkg?si=poEp3AntSWeq9dx1",
+                downloadUrl: "https://www.youtube.com/watch?v=1QArU6QRSkg",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "শাকিব খানের নতুন ব্লকবাস্টার সিনেমা। দর্শকদের জন্য উপহার।" 
+            },
+            
+            { 
+                id: 5, 
+                title: "Prince - শাকিব খান", 
+                year: "২০২৫", 
+                rating: "৮.৫", 
+                quality: "4K", 
+                category: "bangla", 
+                thumbnail: "https://i.ibb.co.com/wFDTz88h/hq720-2.jpg",
+                videoUrl: "https://youtu.be/ECOnbhzHZVo?si=6GDmDG9bMr0o8to2",
+                downloadUrl: "https://www.youtube.com/watch?v=ECOnbhzHZVo",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "শাকিব খানের আসন্ন প্রিন্স মুভি। অপেক্ষায় দর্শকরা।" 
+            },
+            
+            // ========== ইন্ডিয়ান মুভি (তামিল/তেলেগু) - আপডেটেড ==========
+            { 
+                id: 6, 
+                title: "SHRAPIT - Prabhas", 
+                year: "২০২৬", 
+                rating: "৮.৯", 
+                quality: "4K", 
+                category: "indian", 
+                thumbnail: "https://i.ibb.co.com/nM92hFBd/b45db5b37945baba53fd1120aed906c9.jpg",
+                videoUrl: "https://youtu.be/rqvI1rqpzh0?si=P3_XDxzfRGZDUYhb",
+                downloadUrl: "https://www.youtube.com/watch?v=rqvI1rqpzh0",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "প্রভাসের নতুন হরর অ্যাকশন থ্রিলার। ২০২৬ সালের ব্লকবাস্টার।" 
+            },
+            
+            { 
+                id: 7, 
+                title: "New South Hindi Dubbed Movie", 
+                year: "২০২৫", 
+                rating: "৮.৪", 
+                quality: "4K", 
+                category: "indian", 
+                thumbnail: "https://i.ibb.co.com/DgYYfjgd/35cfba583630c17d0f88b668bff8a9af.jpg",
+                videoUrl: "https://youtu.be/P4f4YTY_rJA?si=t6QiMvG9nJibSZbU",
+                downloadUrl: "https://www.youtube.com/watch?v=P4f4YTY_rJA",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "সর্বশেষ সাউথ ইন্ডিয়ান হিন্দি ডাবbed সিনেমা। অ্যাকশন থ্রিলার।" 
+            },
+            
+            { 
+                id: 14, 
+                title: "SHRAPIT - Prabhas (Special)", 
+                year: "২০২৬", 
+                rating: "৮.৮", 
+                quality: "4K", 
+                category: "indian", 
+                thumbnail: "https://i.ibb.co.com/Xrthrb1x/hq720.jpg",
+                videoUrl: "https://youtu.be/1WgXs_90jIc?si=OMO61K-NC8lTSKju",
+                downloadUrl: "https://www.youtube.com/watch?v=1WgXs_90jIc",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "প্রভাসের হরর অ্যাকশন থ্রিলার সিনেমার দ্বিতীয় সংস্করণ।" 
+            },
+            
+            // ========== অ্যানিমে (আপডেটেড) ==========
+            { 
+                id: 8, 
+                title: "Hindi Dubbed Anime Series", 
+                year: "২০২৪", 
+                rating: "৯.০", 
+                quality: "4K", 
+                category: "anime", 
+                thumbnail: "https://i.ibb.co.com/SXgWpwPr/Lead-Hindi-Anime.webp",
+                videoUrl: "https://youtu.be/cgHMzWsG4po?si=VFGweTOp-BBgIXw2",
+                downloadUrl: "https://www.youtube.com/watch?v=cgHMzWsG4po",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "হিন্দি ডাবbed সম্পূর্ণ অ্যানিমে সিরিজ। দারুণ রেটিং।" 
+            },
+            
+            { 
+                id: 9, 
+                title: "Tomo-chan wa Onnanoko!", 
+                year: "২০২৪", 
+                rating: "৮.৯", 
+                quality: "4K", 
+                category: "anime", 
+                thumbnail: "https://i.ibb.co.com/yBm5n174/d9cb2a97aaa3bce4bcf11dc3595997a801653e905c461a07def0ebdeff6d2fd7-SX1080-FMjpg.jpg",
+                videoUrl: "https://youtu.be/rFvSK9QrzvQ?si=BdsjLIgI53W5-KWd",
+                downloadUrl: "https://www.youtube.com/watch?v=rFvSK9QrzvQ",
+                liveUrl: "https://otieu.com/4/9429975",
+                description: "রোমান্টিক কমেডি অ্যানিমে সিরিজ। ব্যাপক জনপ্রিয়।" 
+            },
+            
+            // ========== অ্যাকশন (আগের মতোই থাকবে) ==========
+            { id: 10, title: "মিশন ইম্পসিবল ৭", year: "২০২৩", rating: "৮.৩", quality: "4K", category: "action", 
+              thumbnail: "https://i.ibb.co.com/mi7.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_10",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_10",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_10",
+              description: "টম ক্রুজের অ্যাকশন" },
+            
+            { id: 11, title: "জন উইক ৪", year: "২০২৩", rating: "৮.৭", quality: "4K", category: "action", 
+              thumbnail: "https://i.ibb.co.com/john-wick4.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_11",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_11",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_11",
+              description: "কিয়ানু রিভসের অ্যাকশন" },
+            
+            { id: 12, title: "ফাইটার", year: "২০২৪", rating: "৮.০", quality: "4K", category: "action", 
+              thumbnail: "https://i.ibb.co.com/fighter.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_12",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_12",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_12",
+              description: "হৃত্বিক রোশনের অ্যাকশন" },
+            
+            { id: 15, title: "অ্যাকুয়াম্যান ২", year: "২০২৩", rating: "৭.৫", quality: "4K", category: "action", 
+              thumbnail: "https://i.ibb.co.com/aquaman2.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_15",
+              downloadUrl: "https://www.youtube.com/watch?v=VIDEO_ID_15",
+              liveUrl: "https://www.youtube.com/watch?v=VIDEO_ID_15",
+              description: "ডিসির সুপারহিরো মুভি" },
+            
+            // ========== নাটক (আগের মতোই থাকবে) ==========
+            { id: 101, title: "আয়নাবাজি", year: "২০২৪", rating: "৮.৭", quality: "4K", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/aynabaji.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_1",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_1",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_1",
+              description: "চমৎকার একটি সামাজিক নাটক" },
+            
+            { id: 102, title: "লালচর", year: "২০২৪", rating: "৮.৫", quality: "4K", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/lalchar.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_2",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_2",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_2",
+              description: "রহস্যময় থ্রিলার নাটক" },
+            
+            { id: 103, title: "সিন্ডিকেট", year: "২০২৪", rating: "৮.৯", quality: "4K", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/syndicate.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_3",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_3",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_3",
+              description: "ক্রাইম থ্রিলার নাটক" },
+            
+            { id: 104, title: "প্রতিচ্ছবি", year: "২০২৩", rating: "৮.২", quality: "HD", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/protichobi.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_4",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_4",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_4",
+              description: "পারিবারিক নাটক" },
+            
+            { id: 105, title: "ছায়াবৃক্ষ", year: "২০২৩", rating: "৮.৪", quality: "HD", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/chayabrikkho.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_5",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_5",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_5",
+              description: "গ্রামীণ প্রেক্ষাপটের নাটক" },
+            
+            { id: 106, title: "রেডিও", year: "২০২৪", rating: "৮.১", quality: "HD", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/radio.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_6",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_6",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_6",
+              description: "রোমান্টিক কমেডি নাটক" },
+            
+            { id: 107, title: "নিখোঁজ", year: "২০২৪", rating: "৮.৬", quality: "4K", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/nikhoj.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_7",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_7",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_7",
+              description: "সাসপেন্স থ্রিলার" },
+            
+            { id: 108, title: "বন্ধু", year: "২০২৩", rating: "৭.৯", quality: "HD", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/bondhu.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_8",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_8",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_8",
+              description: "বন্ধুত্বের গল্প" },
+            
+            { id: 109, title: "শেষ দেখা", year: "২০২৪", rating: "৮.৩", quality: "4K", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/sheshdekha.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_9",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_9",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_9",
+              description: "আবেগঘন নাটক" },
+            
+            { id: 110, title: "অচেনা", year: "২০২৪", rating: "৮.০", quality: "HD", category: "natok", 
+              thumbnail: "https://i.ibb.co.com/achena.jpg",
+              videoUrl: "https://www.youtube.com/watch?v=NATOK_ID_10",
+              downloadUrl: "https://www.youtube.com/watch?v=NATOK_ID_10",
+              liveUrl: "https://www.youtube.com/watch?v=NATOK_ID_10",
+              description: "রহস্যময় প্রেমের গল্প" }
+        ];
+    </script>
+    
+    <style>
+        /* সমস্ত স্টাইল আগের মতোই থাকবে */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.5;
+        }
+
+        /* টপ রানিং বার */
+        .top-bar {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 12px 0;
+            overflow: hidden;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .top-bar-content {
+            display: inline-block;
+            animation: scrollLeft 20s linear infinite;
+            padding-left: 100%;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* হেডার */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo span {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ক্যাটাগরি বাটন */
+        .categories {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .categories::-webkit-scrollbar { display: none; }
+
+        .category-wrapper {
+            display: inline-flex;
+            gap: 12px;
+        }
+
+        .category-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            animation: threeColorGlow 3s infinite;
+        }
+
+        .category-btn:hover { transform: translateY(-2px); }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00);
+            color: white;
+        }
+
+        @keyframes threeColorGlow {
+            0% { box-shadow: 0 0 10px #ff0000; }
+            33% { box-shadow: 0 0 10px #0000ff; }
+            66% { box-shadow: 0 0 10px #ffff00; }
+            100% { box-shadow: 0 0 10px #ff0000; }
+        }
+
+        /* ট্রেন্ডিং ব্যানার */
+        .trending-banner {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .trending-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+            border: 4px solid transparent;
+            animation: threeColorBorder 3s infinite;
+        }
+
+        @keyframes threeColorBorder {
+            0% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+            33% { border-color: #0000ff; box-shadow: 0 0 15px #0000ff; }
+            66% { border-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
+            100% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        }
+
+        .trending-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .trending-card:hover .trending-image { transform: scale(1.05); }
+
+        /* ট্রেন্ডিং টাইটেল */
+        .trending-title-container {
+            max-width: 1400px;
+            margin: 10px auto 30px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .trending-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #333;
+        }
+
+        .trending-badge {
+            background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            animation: threeColorGlow 3s infinite;
+        }
+
+        /* মুভি গ্রিড */
+        .movie-section {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (min-width: 640px) {
+            .movie-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            .movie-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+
+        /* মুভি কার্ড */
+        .movie-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            border: 4px solid transparent;
+            animation: threeColorBorder 3s infinite;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            animation: threeColorBorder 1.5s infinite;
+        }
+
+        .movie-thumbnail {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+        }
+
+        .movie-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover .movie-thumbnail img { transform: scale(1.1); }
+
+        .movie-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .movie-card:hover .movie-overlay { opacity: 1; }
+
+        .movie-overlay i {
+            font-size: 50px;
+            color: white;
+        }
+
+        .movie-quality {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            z-index: 2;
+            border: 2px solid transparent;
+            animation: threeColorBorder 2s infinite;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            z-index: 2;
+            animation: threeColorGlow 2s infinite;
+        }
+
+        .movie-info {
+            padding: 15px;
+            background: white;
+        }
+
+        .movie-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* প্লেয়ার সেকশন */
+        .player-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .player-section.active { display: block; }
+
+        .player-header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 3px solid transparent;
+            animation: threeColorBorder 2s infinite;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00);
+            color: white;
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: black;
+            position: relative;
+        }
+
+        .video-player, .youtube-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .movie-actions {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .premium-btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .premium-btn.download {
+            background: linear-gradient(135deg, #ff0000, #0000ff);
+            animation: threeColorBorder 2s infinite;
+        }
+
+        .premium-btn.live {
+            background: linear-gradient(135deg, #0000ff, #ffff00);
+            animation: threeColorBorder 2s infinite reverse;
+        }
+
+        .premium-btn:hover { transform: scale(1.05); }
+
+        /* এড মোডাল */
+        .ad-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .ad-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .ad-modal-content {
+            background: white;
+            border-radius: 40px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8);
+            transition: 0.3s;
+            border: 4px solid transparent;
+            animation: threeColorBorder 2s infinite;
+        }
+
+        .ad-modal.show .ad-modal-content { transform: scale(1); }
+
+        .ad-timer-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+
+        .ad-timer-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .ad-timer-svg circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .ad-timer-bg { stroke: #e0e0e0; }
+
+        .ad-timer-progress {
+            stroke: #ff0000;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear;
+            animation: progressColor 3s infinite;
+        }
+
+        @keyframes progressColor {
+            0% { stroke: #ff0000; }
+            33% { stroke: #0000ff; }
+            66% { stroke: #ffff00; }
+            100% { stroke: #ff0000; }
+        }
+
+        .ad-timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: 800;
+            color: #ff0000;
+            animation: textColor 3s infinite;
+        }
+
+        @keyframes textColor {
+            0% { color: #ff0000; }
+            33% { color: #0000ff; }
+            66% { color: #ffff00; }
+            100% { color: #ff0000; }
+        }
+
+        .ad-message {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .ad-warning {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 50px;
+            margin: 15px 0;
+            font-size: 14px;
+            display: none;
+            border: 2px solid transparent;
+            animation: threeColorBorder 1s infinite;
+        }
+
+        .ad-warning.show { display: block; }
+
+        .ad-skip-btn {
+            background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .ad-skip-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ad-skip-btn.active:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- টপ রানিং বার -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <i class="fas fa-film"></i> আমাদের সাইট থেকে সকল মুভি ফ্রিতে দেখতে ও ডাউনলোড করতে পারবেন। তার জন্য আপনাকে ছোট্ট ১০ সেকেন্ডের একটি বিজ্ঞাপন দেখতে হবে। <i class="fas fa-clock"></i> ১০ সেকেন্ড <i class="fas fa-download"></i>
+        </div>
+    </div>
+
+    <!-- হেডার -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="" alt="Logo" id="logoImg" style="display: none;">
+                <span id="siteName">MovieFlex</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ক্যাটাগরি বাটন -->
+    <div class="categories">
+        <div class="category-wrapper">
+            <div class="category-btn active" data-category="all" onclick="filterMovies('all')">
+                <i class="fas fa-globe"></i> সবগুলো
+            </div>
+            <div class="category-btn" data-category="hindi" onclick="filterMovies('hindi')">
+                <i class="fas fa-language"></i> হিন্দি
+            </div>
+            <div class="category-btn" data-category="bangla" onclick="filterMovies('bangla')">
+                <i class="fas fa-book-open"></i> বাংলা
+            </div>
+            <div class="category-btn" data-category="indian" onclick="filterMovies('indian')">
+                <i class="fas fa-map"></i> ইন্ডিয়ান
+            </div>
+            <div class="category-btn" data-category="anime" onclick="filterMovies('anime')">
+                <i class="fas fa-dragon"></i> অ্যানিমে
+            </div>
+            <div class="category-btn" data-category="action" onclick="filterMovies('action')">
+                <i class="fas fa-fist-raised"></i> অ্যাকশন
+            </div>
+            <div class="category-btn" data-category="natok" onclick="filterMovies('natok')">
+                <i class="fas fa-theater-masks"></i> নাটক
+            </div>
+        </div>
+    </div>
+
+    <!-- ট্রেন্ডিং ব্যানার -->
+    <div class="trending-banner">
+        <div class="trending-card" onclick="handleMovieClick('trending')">
+            <img src="https://i.ibb.co.com/DfLzRDm0/article.jpg" alt="ট্রেন্ডিং মুভি" class="trending-image" id="trendingImage">
+        </div>
+    </div>
+
+    <!-- ট্রেন্ডিং টাইটেল -->
+    <div class="trending-title-container">
+        <span class="trending-badge"><i class="fas fa-fire"></i> Trending </span>
+        <h1 class="trending-title" id="trendingTitle">তুফান (Toofan) - শাকিব খান</h1>
+    </div>
+
+    <!-- মুভি গ্রিড -->
+    <div class="movie-section">
+        <div class="section-header">
+            <h2><i class="fas fa-fire"></i> Popular</h2>
+        </div>
+        <div class="movie-grid" id="movieGrid"></div>
+    </div>
+
+    <!-- এড মোডাল -->
+    <div class="ad-modal" id="adModal">
+        <div class="ad-modal-content">
+            <div class="ad-timer-circle">
+                <svg class="ad-timer-svg" viewBox="0 0 120 120">
+                    <circle class="ad-timer-bg" cx="60" cy="60" r="50"></circle>
+                    <circle class="ad-timer-progress" id="adProgress" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="ad-timer-text" id="adTimer">10</div>
+            </div>
+            
+            <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #ff0000, #0000ff, #ffff00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <i class="fas fa-ad"></i> বিজ্ঞাপন
+            </h3>
+            
+            <p class="ad-message" id="adMessage">
+                ২ সেকেন্ড পর বিজ্ঞাপনে যাচ্ছেন...
+            </p>
+            
+            <div class="ad-warning" id="adWarning">
+                <i class="fas fa-exclamation-triangle"></i>
+                সতর্কতা: ব্যাক করলে আবার ১০ সেকেন্ড এড দেখতে হবে!
+            </div>
+            
+            <button class="ad-skip-btn" id="skipAdBtn" onclick="skipAd()">
+                <i class="fas fa-forward"></i> স্কিপ এড (১০ সেকেন্ড পর)
+            </button>
+        </div>
+    </div>
+
+    <!-- প্লেয়ার সেকশন -->
+    <div class="player-section" id="playerSection">
+        <div class="player-header">
+            <div class="back-btn" onclick="closePlayer()">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <h3 id="playerMovieTitle">Movie Name</h3>
+        </div>
+
+        <div class="video-container" id="videoContainer">
+            <!-- ভিডিও প্লেয়ার এখানে ডায়নামিকভাবে বসবে -->
+        </div>
+
+        <div class="movie-actions">
+            <h2 id="playerTitle" style="font-size: 32px; font-weight: 800; margin-bottom: 10px;"></h2>
+            <p id="playerDesc" style="color: #666; margin-bottom: 15px;"></p>
+            
+            <div class="action-buttons">
+                <a href="#" class="premium-btn download" id="downloadBtn" download>
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
+                </a>
+                <a href="#" class="premium-btn live" id="watchLiveBtn" target="_blank">
+                    <i class="fas fa-video"></i>
+                    <span>লাইভ দেখুন</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ইউটিউব ইউআরএল এক্সট্রাক্ট ফাংশন
+        // ============================================
+        function getYouTubeVideoId(url) {
+            if (!url) return null;
+            
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+                /youtube\.com\/shorts\/([^&\n?#]+)/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        function isYouTubeUrl(url) {
+            return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+        }
+
+        // ============================================
+        // ডাইরেক্ট ইউটিউব অ্যাপে ওপেন করার ফাংশন
+        // ============================================
+        function openInYouTubeApp(videoUrl) {
+            const videoId = getYouTubeVideoId(videoUrl);
+            if (!videoId) return false;
+            
+            const youtubeAppUrl = `vnd.youtube:${videoId}`;
+            const youtubeWebUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                window.location.href = youtubeAppUrl;
+                
+                setTimeout(function() {
+                    window.location.href = youtubeWebUrl;
+                }, 1000);
+            } else {
+                window.open(youtubeWebUrl, '_blank');
+            }
+            
+            return true;
+        }
+
+        // ============================================
+        // গ্লোবাল ভেরিয়েবল
+        // ============================================
+        let currentCategory = 'all';
+        let selectedMovie = null;
+        let adTimer = null;
+        let redirectTimer = null;
+        let timeLeft = AD_CONFIG.duration;
+        let canSkip = false;
+        let adWindow = null;
+        let downloadMode = false;
+
+        // সাইট কনফিগারেশন প্রয়োগ
+        document.getElementById('siteName').textContent = SITE_CONFIG.siteName;
+        
+        if (SITE_CONFIG.logoUrl) {
+            document.getElementById('logoImg').src = SITE_CONFIG.logoUrl;
+            document.getElementById('logoImg').style.display = 'block';
+        }
+
+        document.querySelector('.top-bar-content').innerHTML = `
+            <i class="fas fa-film"></i> ${TOP_BAR_MESSAGE} <i class="fas fa-clock"></i> ${AD_CONFIG.duration} সেকেন্ড <i class="fas fa-download"></i>
+        `;
+
+        document.getElementById('trendingImage').src = TRENDING_MOVIE.thumbnail;
+        document.getElementById('trendingTitle').textContent = TRENDING_MOVIE.title;
+
+        function getAdLinkForMovie(movie) {
+            if (movie.id && MOVIE_SPECIFIC_AD_LINKS[movie.id]) return MOVIE_SPECIFIC_AD_LINKS[movie.id];
+            if (movie.category && CATEGORY_AD_LINKS[movie.category]) return CATEGORY_AD_LINKS[movie.category];
+            if (movie.id === "trending") return TRENDING_AD_LINK;
+            return AD_CONFIG.defaultAdLink;
+        }
+
+        window.onload = function() {
+            loadMovies();
+            setupBackButtonProtection();
+        };
+
+        function loadMovies(category = 'all') {
+            const movieGrid = document.getElementById('movieGrid');
+            let filteredMovies = category === 'all' ? MOVIES : MOVIES.filter(m => m.category === category);
+            
+            let html = '';
+            filteredMovies.forEach(movie => {
+                const isFeatured = FEATURED_MOVIES.includes(movie.id);
+                html += `
+                    <div class="movie-card" onclick="handleMovieClick(${movie.id})">
+                        ${isFeatured ? '<div class="featured-badge"><i class="fas fa-crown"></i> ফিচারড</div>' : ''}
+                        <div class="movie-thumbnail">
+                            <img src="${movie.thumbnail}" alt="${movie.title}">
+                            <span class="movie-quality">${movie.quality}</span>
+                            <div class="movie-overlay">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="movie-info">
+                            <div class="movie-title">${movie.title}</div>
+                            <div class="movie-meta">
+                                <span>${movie.year}</span>
+                                <span><i class="fas fa-star"></i> ${movie.rating}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            movieGrid.innerHTML = html;
+        }
+
+        function filterMovies(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.category === category) btn.classList.add('active');
+            });
+            loadMovies(category);
+        }
+
+        function handleMovieClick(movieId) {
+            selectedMovie = movieId === "trending" ? TRENDING_MOVIE : MOVIES.find(m => m.id === movieId);
+            timeLeft = AD_CONFIG.duration;
+            downloadMode = false;
+            showAdModal();
+        }
+
+        function handleDownloadClick(movie) {
+            selectedMovie = movie;
+            timeLeft = AD_CONFIG.downloadAdDuration || AD_CONFIG.duration;
+            downloadMode = true;
+            showAdModal();
+        }
+
+        function showAdModal() {
+            const modal = document.getElementById('adModal');
+            const timerSpan = document.getElementById('adTimer');
+            const progressCircle = document.getElementById('adProgress');
+            const skipBtn = document.getElementById('skipAdBtn');
+            const adMessage = document.getElementById('adMessage');
+            
+            if (downloadMode) {
+                adMessage.innerHTML = `${AD_CONFIG.downloadRedirectDelay || 2} সেকেন্ড পর ডাউনলোড পেজে যাচ্ছেন...`;
+            } else {
+                adMessage.innerHTML = `${AD_CONFIG.redirectDelay} সেকেন্ড পর বিজ্ঞাপনে যাচ্ছেন...`;
+            }
+            
+            timeLeft = downloadMode ? (AD_CONFIG.downloadAdDuration || AD_CONFIG.duration) : AD_CONFIG.duration;
+            canSkip = false;
+            timerSpan.textContent = timeLeft;
+            progressCircle.style.strokeDashoffset = '314';
+            skipBtn.classList.remove('active');
+            
+            modal.classList.add('show');
+            
+            redirectTimer = setTimeout(redirectToAd, (downloadMode ? AD_CONFIG.downloadRedirectDelay : AD_CONFIG.redirectDelay) * 1000);
+            startAdTimer();
+        }
+
+        function startAdTimer() {
+            const timerSpan = document.getElementById('adTimer');
+            const progressCircle = document.getElementById('adProgress');
+            const skipBtn = document.getElementById('skipAdBtn');
+            const circumference = 314;
+            
+            adTimer = setInterval(() => {
+                timeLeft--;
+                timerSpan.textContent = timeLeft;
+                const progress = ((downloadMode ? AD_CONFIG.downloadAdDuration : AD_CONFIG.duration) - timeLeft) / (downloadMode ? AD_CONFIG.downloadAdDuration : AD_CONFIG.duration) * circumference;
+                progressCircle.style.strokeDashoffset = circumference - progress;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(adTimer);
+                    canSkip = true;
+                    skipBtn.classList.add('active');
+                    skipBtn.innerHTML = '<i class="fas fa-check"></i> স্কিপ এড';
+                }
+            }, 1000);
+        }
+
+        function redirectToAd() {
+            let adLink;
+            
+            if (downloadMode) {
+                adLink = AD_CONFIG.downloadAdLink;
+            } else {
+                adLink = getAdLinkForMovie(selectedMovie);
+            }
+            
+            adWindow = window.open(adLink, '_blank');
+            
+            if (downloadMode) {
+                document.getElementById('adMessage').innerHTML = '📺 ডাউনলোডের জন্য বিজ্ঞাপন চলছে... ১০ সেকেন্ড পর ইউটিউবে যাবেন।';
+            } else {
+                document.getElementById('adMessage').innerHTML = AD_CONFIG.adMessage;
+            }
+        }
+
+        function skipAd() {
+            if (canSkip) {
+                clearTimeout(redirectTimer);
+                clearInterval(adTimer);
+                if (adWindow && !adWindow.closed) adWindow.close();
+                closeAdModal();
+                
+                if (downloadMode) {
+                    openInYouTubeApp(selectedMovie.downloadUrl);
+                } else {
+                    openPlayer();
+                }
+            }
+        }
+
+        function closeAdModal() {
+            document.getElementById('adModal').classList.remove('show');
+        }
+
+        function openPlayer() {
+            const playerSection = document.getElementById('playerSection');
+            const videoContainer = document.getElementById('videoContainer');
+            const playerTitle = document.getElementById('playerTitle');
+            const playerDesc = document.getElementById('playerDesc');
+            const playerMovieTitle = document.getElementById('playerMovieTitle');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const watchLiveBtn = document.getElementById('watchLiveBtn');
+            
+            playerTitle.textContent = selectedMovie.title;
+            playerDesc.textContent = selectedMovie.description;
+            playerMovieTitle.textContent = selectedMovie.title;
+            
+            videoContainer.innerHTML = '';
+            
+            if (selectedMovie.videoUrl && isYouTubeUrl(selectedMovie.videoUrl)) {
+                const videoId = getYouTubeVideoId(selectedMovie.videoUrl);
+                if (videoId) {
+                    const iframe = document.createElement('iframe');
+                    iframe.className = 'youtube-iframe';
+                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                    iframe.allowFullscreen = true;
+                    videoContainer.appendChild(iframe);
+                }
+            } else {
+                const video = document.createElement('video');
+                video.className = 'video-player';
+                video.controls = true;
+                video.autoplay = true;
+                
+                const source = document.createElement('source');
+                source.src = selectedMovie.videoUrl;
+                source.type = 'video/mp4';
+                
+                video.appendChild(source);
+                videoContainer.appendChild(video);
+            }
+            
+            downloadBtn.onclick = (e) => {
+                e.preventDefault();
+                handleDownloadClick(selectedMovie);
+            };
+            
+            watchLiveBtn.href = selectedMovie.liveUrl;
+            
+            playerSection.classList.add('active');
+        }
+
+        function closePlayer() {
+            const playerSection = document.getElementById('playerSection');
+            const videoContainer = document.getElementById('videoContainer');
+            
+            videoContainer.innerHTML = '';
+            playerSection.classList.remove('active');
+        }
+
+        function setupBackButtonProtection() {
+            for(let i = 0; i < 3; i++) history.pushState(null, null, location.href);
+            
+            window.addEventListener('popstate', function() {
+                const modal = document.getElementById('adModal');
+                if (modal.classList.contains('show')) {
+                    document.getElementById('adWarning').classList.add('show');
+                    alert(`⚠️ সতর্কতা: ব্যাক করলে আবার ${AD_CONFIG.duration} সেকেন্ড এড দেখতে হবে!`);
+                    
+                    clearTimeout(redirectTimer);
+                    clearInterval(adTimer);
+                    if (adWindow && !adWindow.closed) adWindow.close();
+                    
+                    modal.classList.remove('show');
+                    setTimeout(showAdModal, 500);
+                    return;
+                }
+                
+                const EXIT_MESSAGE = "⚠️ আপনি কি সত্যিই পৃষ্ঠা ছেড়ে যেতে চান?";
+                if (confirm(EXIT_MESSAGE)) {
+                    // exit
+                } else {
+                    for(let i = 0; i < 3; i++) history.pushState(null, null, location.href);
+                }
+            });
+            
+            setInterval(() => history.pushState(null, null, location.href), 2000);
+        }
+
+        setInterval(function() {
+            if (adWindow && adWindow.closed === false && timeLeft <= 0) {
+                adWindow.close();
+                closeAdModal();
+                
+                if (downloadMode) {
+                    openInYouTubeApp(selectedMovie.downloadUrl);
+                } else {
+                    openPlayer();
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
